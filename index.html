@@ -185,38 +185,141 @@ button:hover {
 <script>
 // 数据存储 (问题，答案，类型)
 const questions = [
-    {question: "tan 0° = ?", answer: "0", type: "angle"},
-    {question: "tan 30° = ?", answer: "\\frac{1}{\\sqrt{3}}", type: "angle"},
-    {question: "tan 45° = ?", answer: "1", type: "angle"},
-    {question: "tan 60° = ?", answer: "\\sqrt{3}", type: "angle"},
-    {question: "tan 90° = ?", answer: "Infinity", type: "angle"},
-
-    {question: "sin 0° = ?", answer: "0", type: "angle"},
-    {question: "sin 30° = ?", answer: "\\frac{1}{2}", type: "angle"},
-    {question: "sin 45° = ?", answer: "\\frac{\\sqrt{2}}{2}", type: "angle"},
-    {question: "sin 60° = ?", answer: "\\frac{\\sqrt{3}}{2}", type: "angle"},
-    {question: "sin 90° = ?", answer: "1", type: "angle"},
-
-    {question: "cos 0° = ?", answer: "1", type: "angle"},
-    {question: "cos 30° = ?", answer: "\\frac{\\sqrt{3}}{2}", type: "angle"},
-    {question: "cos 45° = ?", answer: "\\frac{\\sqrt{2}}{2}", type: "angle"},
-    {question: "cos 60° = ?", answer: "\\frac{1}{2}", type: "angle"},
-    {question: "cos 90° = ?", answer: "0", type: "angle"},
-
-    {question: "tan \\(\\frac{\\pi}{6}\\) = ?", answer: "\\frac{1}{\\sqrt{3}}", type: "latex"},
-    {question: "tan \\(\\frac{\\pi}{4}\\) = ?", answer: "1", type: "latex"},
-    {question: "tan \\(\\frac{\\pi}{3}\\) = ?", answer: "\\sqrt{3}", type: "latex"},
-    {question: "tan \\(\\frac{\\pi}{2}\\) = ?", answer: "Infinity", type: "latex"},
-
-    {question: "sin \\(\\frac{\\pi}{6}\\) = ?", answer: "\\frac{1}{2}", type: "latex"},
-    {question: "sin \\(\\frac{\\pi}{4}\\) = ?", answer: "\\frac{\\sqrt{2}}{2}", type: "latex"},
-    {question: "sin \\(\\frac{\\pi}{3}\\) = ?", answer: "\\frac{\\sqrt{3}}{2}", type: "latex"},
-    {question: "sin \\(\\frac{\\pi}{2}\\) = ?", answer: "1", type: "latex"},
-
-    {question: "cos \\(\\frac{\\pi}{6}\\) = ?", answer: "\\frac{\\sqrt{3}}{2}", type: "latex"},
-    {question: "cos \\(\\frac{\\pi}{4}\\) = ?", answer: "\\frac{\\sqrt{2}}{2}", type: "latex"},
-    {question: "cos \\(\\frac{\\pi}{3}\\) = ?", answer: "\\frac{1}{2}", type: "latex"},
-    {question: "cos \\(\\frac{\\pi}{2}\\) = ?", answer: "0", type: "latex"},
+    {
+        "question": "tan 0° =?",
+        "answer": "0",
+        "type": "angle"
+    },
+    {
+        "question": "tan 30° =?",
+        "answer": "\\frac{\\sqrt{3}}{3}",
+        "type": "angle"
+    },
+    {
+        "question": "tan 45° =?",
+        "answer": "1",
+        "type": "angle"
+    },
+    {
+        "question": "tan 60° =?",
+        "answer": "\\sqrt{3}",
+        "type": "angle"
+    },
+    {
+        "question": "tan 90° =?",
+        "answer": "不存在",
+        "type": "angle"
+    },
+    {
+        "question": "sin 0° =?",
+        "answer": "0",
+        "type": "angle"
+    },
+    {
+        "question": "sin 30° =?",
+        "answer": "\\frac{1}{2}",
+        "type": "angle"
+    },
+    {
+        "question": "sin 45° =?",
+        "answer": "\\frac{\\sqrt{2}}{2}",
+        "type": "angle"
+    },
+    {
+        "question": "sin 60° =?",
+        "answer": "\\frac{\\sqrt{3}}{2}",
+        "type": "angle"
+    },
+    {
+        "question": "sin 90° =?",
+        "answer": "1",
+        "type": "angle"
+    },
+    {
+        "question": "cos 0° =?",
+        "answer": "1",
+        "type": "angle"
+    },
+    {
+        "question": "cos 30° =?",
+        "answer": "\\frac{\\sqrt{3}}{2}",
+        "type": "angle"
+    },
+    {
+        "question": "cos 45° =?",
+        "answer": "\\frac{\\sqrt{2}}{2}",
+        "type": "angle"
+    },
+    {
+        "question": "cos 60° =?",
+        "answer": "\\frac{1}{2}",
+        "type": "angle"
+    },
+    {
+        "question": "cos 90° =?",
+        "answer": "0",
+        "type": "angle"
+    },
+    {
+        "question": "tan \\(\\frac{\\pi}{6}\\) =?",
+        "answer": "\\frac{\\sqrt{3}}{3}",
+        "type": "latex"
+    },
+    {
+        "question": "tan \\(\\frac{\\pi}{4}\\) =?",
+        "answer": "1",
+        "type": "latex"
+    },
+    {
+        "question": "tan \\(\\frac{\\pi}{3}\\) =?",
+        "answer": "\\sqrt{3}",
+        "type": "latex"
+    },
+    {
+        "question": "tan \\(\\frac{\\pi}{2}\\) =?",
+        "answer": "不存在",
+        "type": "latex"
+    },
+    {
+        "question": "sin \\(\\frac{\\pi}{6}\\) =?",
+        "answer": "\\frac{1}{2}",
+        "type": "latex"
+    },
+    {
+        "question": "sin \\(\\frac{\\pi}{4}\\) =?",
+        "answer": "\\frac{\\sqrt{2}}{2}",
+        "type": "latex"
+    },
+    {
+        "question": "sin \\(\\frac{\\pi}{3}\\) =?",
+        "answer": "\\frac{\\sqrt{3}}{2}",
+        "type": "latex"
+    },
+    {
+        "question": "sin \\(\\frac{\\pi}{2}\\) =?",
+        "answer": "1",
+        "type": "latex"
+    },
+    {
+        "question": "cos \\(\\frac{\\pi}{6}\\) =?",
+        "answer": "\\frac{\\sqrt{3}}{2}",
+        "type": "latex"
+    },
+    {
+        "question": "cos \\(\\frac{\\pi}{4}\\) =?",
+        "answer": "\\frac{\\sqrt{2}}{2}",
+        "type": "latex"
+    },
+    {
+        "question": "cos \\(\\frac{\\pi}{3}\\) =?",
+        "answer": "\\frac{1}{2}",
+        "type": "latex"
+    },
+    {
+        "question": "cos \\(\\frac{\\pi}{2}\\) =?",
+        "answer": "0",
+        "type": "latex"
+    }
 ];
 
 let currentQuestionIndex = 0;
