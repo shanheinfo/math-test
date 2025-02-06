@@ -1,0 +1,448 @@
+<!-- copyright &copy; shanhe shanheinfo 2025.2.6 https://github.com/shanheinfo/math-test -->
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="author" content="山河">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三角函数测试</title>
+<style>
+body {
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column; 
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 400px;
+}
+
+#question {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+input[type="text"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 60%;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #3e8e41;
+}
+
+#result {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.toggle-container {
+  margin-bottom: 10px;
+}
+
+.toggle-container button {
+  margin: 0 5px;
+}
+
+#answerPreview {
+  margin-top: 5px;
+  font-style: italic;
+}
+
+
+.question-navigation {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.question-box {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ccc;
+  margin: 0 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: #eee;
+}
+
+.question-box.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.question-box.answered {
+  color: white;
+}
+
+.question-box.correct {
+  background-color: green; 
+  color: white;
+}
+
+.question-box.incorrect {
+  background-color: red;
+  color: white;
+}
+
+#finalResult {
+  margin-top: 20px;
+  text-align: left;
+}
+
+#finalResult h3 {
+  margin-bottom: 10px;
+}
+
+#finalResult ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+#finalResult li {
+  margin-bottom: 5px;
+}
+
+
+.formula-buttons {
+  margin-bottom: 5px;
+}
+
+.formula-buttons button {
+  padding: 5px 10px;
+  margin: 0 3px;
+  background-color: #ddd;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+
+</head>
+<body>
+  <div class="question-navigation" id="questionNavigation"></div>
+  <div class="container">
+    <div class="toggle-container">
+      <button id="angleBtn" onclick="setQuestionType('angle')">角度制</button>
+      <button id="latexBtn" onclick="setQuestionType('latex')">弧度制</button>
+    </div>
+
+
+     <div class="formula-buttons">
+      <button onclick="insertFormula('\\\sqrt{}')">根号</button>
+      <button onclick="insertFormula('\\frac{}{}')">分数</button>
+    </div>
+
+    <div id="question"></div>
+    <input type="text" id="answer" oninput="updateAnswerPreview()">
+    <div id="answerPreview"></div>
+    <div id="correctAnswer" style="margin-top: 5px;"></div>
+    <div id="userAnswer" style="margin-top: 5px;"></div>
+    <button onclick="checkAnswer()">确定</button>
+    <div id="result"></div>
+  </div>
+  <div id="finalResult" style="display: none;">
+    <h3>答题结果</h3>
+    <p>正确数量：<span id="correctCount">0</span></p>
+    <p>错误数量：<span id="incorrectCount">0</span></p>
+    <h4>错误题目：</h4>
+    <ul id="incorrectQuestions"></ul>
+  </div>
+  <p style="margin-top: 60px;color: rgba(201, 195, 201, 0.533);">Copyright &copy; 2025 bluewu.cn 山河/shanhe <a style="color: rgba(201, 195, 201, 0.533);" href="https://github.com/shanheinfo/math-test">源代码已开源，仓库地址</a></p>
+<script>
+// 数据存储 (问题，答案，类型)
+const questions = [
+    {question: "tan 0° = ?", answer: "0", type: "angle"},
+    {question: "tan 30° = ?", answer: "\\frac{1}{\\sqrt{3}}", type: "angle"},
+    {question: "tan 45° = ?", answer: "1", type: "angle"},
+    {question: "tan 60° = ?", answer: "\\sqrt{3}", type: "angle"},
+    {question: "tan 90° = ?", answer: "Infinity", type: "angle"},
+
+    {question: "sin 0° = ?", answer: "0", type: "angle"},
+    {question: "sin 30° = ?", answer: "\\frac{1}{2}", type: "angle"},
+    {question: "sin 45° = ?", answer: "\\frac{\\sqrt{2}}{2}", type: "angle"},
+    {question: "sin 60° = ?", answer: "\\frac{\\sqrt{3}}{2}", type: "angle"},
+    {question: "sin 90° = ?", answer: "1", type: "angle"},
+
+    {question: "cos 0° = ?", answer: "1", type: "angle"},
+    {question: "cos 30° = ?", answer: "\\frac{\\sqrt{3}}{2}", type: "angle"},
+    {question: "cos 45° = ?", answer: "\\frac{\\sqrt{2}}{2}", type: "angle"},
+    {question: "cos 60° = ?", answer: "\\frac{1}{2}", type: "angle"},
+    {question: "cos 90° = ?", answer: "0", type: "angle"},
+
+    {question: "tan \\(\\frac{\\pi}{6}\\) = ?", answer: "\\frac{1}{\\sqrt{3}}", type: "latex"},
+    {question: "tan \\(\\frac{\\pi}{4}\\) = ?", answer: "1", type: "latex"},
+    {question: "tan \\(\\frac{\\pi}{3}\\) = ?", answer: "\\sqrt{3}", type: "latex"},
+    {question: "tan \\(\\frac{\\pi}{2}\\) = ?", answer: "Infinity", type: "latex"},
+
+    {question: "sin \\(\\frac{\\pi}{6}\\) = ?", answer: "\\frac{1}{2}", type: "latex"},
+    {question: "sin \\(\\frac{\\pi}{4}\\) = ?", answer: "\\frac{\\sqrt{2}}{2}", type: "latex"},
+    {question: "sin \\(\\frac{\\pi}{3}\\) = ?", answer: "\\frac{\\sqrt{3}}{2}", type: "latex"},
+    {question: "sin \\(\\frac{\\pi}{2}\\) = ?", answer: "1", type: "latex"},
+
+    {question: "cos \\(\\frac{\\pi}{6}\\) = ?", answer: "\\frac{\\sqrt{3}}{2}", type: "latex"},
+    {question: "cos \\(\\frac{\\pi}{4}\\) = ?", answer: "\\frac{\\sqrt{2}}{2}", type: "latex"},
+    {question: "cos \\(\\frac{\\pi}{3}\\) = ?", answer: "\\frac{1}{2}", type: "latex"},
+    {question: "cos \\(\\frac{\\pi}{2}\\) = ?", answer: "0", type: "latex"},
+];
+
+let currentQuestionIndex = 0;
+let currentQuestionType = 'angle'; 
+let questionStates = []; 
+const questionElement = document.getElementById("question");
+const answerElement = document.getElementById("answer");
+const answerPreviewElement = document.getElementById("answerPreview");
+const correctAnswerElement = document.getElementById("correctAnswer");
+const userAnswerElement = document.getElementById("userAnswer"); 
+const resultElement = document.getElementById("result");
+const questionNavigationElement = document.getElementById("questionNavigation");
+const finalResultElement = document.getElementById("finalResult");
+const incorrectQuestionsElement = document.getElementById("incorrectQuestions");
+
+function initializeQuiz() {
+  // 清空本地存储
+  localStorage.clear();
+  // 过滤符合当前类型的问题
+  const filteredQuestions = questions.filter(q => q.type === currentQuestionType);
+  questionStates = filteredQuestions.map(() => ({ answered: false, correct: null, answer: '' }));
+  currentQuestionIndex = 0;
+  updateQuestionNavigation();
+  showQuestion();
+}
+
+function showQuestion() {
+  const filteredQuestions = questions.filter(q => q.type === currentQuestionType);
+
+  if (filteredQuestions.length === 0) {
+    resultElement.textContent = `没有 ${currentQuestionType} 类型的问题。`;
+    questionElement.textContent = "";
+    answerElement.value = "";
+    answerPreviewElement.textContent = "";
+    return;
+  }
+
+  const questionData = filteredQuestions[currentQuestionIndex];
+  questionElement.textContent = questionData.question;
+
+  // 如果问题已经回答过，则显示之前的答案和正确答案
+  if (questionStates[currentQuestionIndex].answered) {
+      answerElement.value = questionStates[currentQuestionIndex].answer;
+      updateAnswerPreview();
+      answerElement.disabled = true; // 禁用输入框
+
+      // 显示答案
+      correctAnswerElement.innerHTML = `正确答案: \\(${questionData.answer}\\)`;
+      userAnswerElement.innerHTML = `你的答案: \\(${questionStates[currentQuestionIndex].answer}\\)`;
+       MathJax.Hub.Queue(["Typeset",MathJax.Hub, correctAnswerElement,userAnswerElement]);
+  } else {
+      answerElement.value = "";
+      updateAnswerPreview();
+      answerElement.disabled = false; 
+      correctAnswerElement.innerHTML = "";
+      userAnswerElement.innerHTML = "";
+  }
+  resultElement.textContent = "";
+  MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+}
+
+function checkAnswer() {
+    const filteredQuestions = questions.filter(q => q.type === currentQuestionType);
+    const questionData = filteredQuestions[currentQuestionIndex];
+    const userAnswer = answerElement.value.trim();
+    const correctAnswer = questionData.answer.trim();
+
+    if (userAnswer === correctAnswer) {
+        resultElement.textContent = "正确!";
+        questionStates[currentQuestionIndex].answered = true;
+        questionStates[currentQuestionIndex].correct = true;
+        questionStates[currentQuestionIndex].answer = userAnswer;
+        answerElement.disabled = true;
+        updateQuestionNavigation();
+        // 保存到本地存储
+        saveQuestionStates();
+
+        // 检查是否所有问题都已回答
+        if (questionStates.every(state => state.answered)) {
+            showFinalResults();
+        } else {
+             setTimeout(() => {
+                // 自动跳转到下一个未回答的问题
+                let nextQuestionIndex = currentQuestionIndex + 1;
+                while (nextQuestionIndex < questionStates.length && questionStates[nextQuestionIndex].answered) {
+                    nextQuestionIndex++;
+                }
+                if (nextQuestionIndex < questionStates.length) {
+                    currentQuestionIndex = nextQuestionIndex;
+                } else {
+                    // 如果没有下一个未回答的问题，则回到第一个未回答的问题
+                    nextQuestionIndex = 0;
+                    while (nextQuestionIndex < questionStates.length && questionStates[nextQuestionIndex].answered) {
+                        nextQuestionIndex++;
+                    }
+                    if (nextQuestionIndex < questionStates.length) {
+                        currentQuestionIndex = nextQuestionIndex;
+                    }
+                }
+                showQuestion();
+            }, 500);
+        }
+    } else {
+        resultElement.innerHTML = `错误! 正确答案是: \\(${correctAnswer}\\)`;
+        questionStates[currentQuestionIndex].correct = false;
+        questionStates[currentQuestionIndex].answered = true;
+        questionStates[currentQuestionIndex].answer = userAnswer;
+        answerElement.disabled = true;
+        updateQuestionNavigation();
+        // 保存到本地存储
+        saveQuestionStates();
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+
+    }
+}
+
+
+function setQuestionType(type) {
+  currentQuestionType = type;
+  // 清空
+  initializeQuiz(); 
+  // 更新按钮样式 
+  document.getElementById("angleBtn").classList.remove("active");
+  document.getElementById("latexBtn").classList.remove("active");
+  document.getElementById(type + "Btn").classList.add("active");
+}
+
+function updateAnswerPreview() {
+  const answerText = answerElement.value.trim();
+    answerPreviewElement.innerHTML = `\\(${answerText}\\)`;
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub, answerPreviewElement]);
+}
+
+function goToQuestion(index) {
+  currentQuestionIndex = index;
+  showQuestion();
+  updateQuestionNavigation();
+}
+
+function updateQuestionNavigation() {
+  const filteredQuestions = questions.filter(q => q.type === currentQuestionType);
+  let navigationHTML = '';
+  for (let i = 0; i < filteredQuestions.length; i++) {
+    const isAnswered = questionStates[i].answered;
+    const isCorrect = questionStates[i].correct; 
+    const isActive = i === currentQuestionIndex;
+    let boxClass = `question-box ${isActive ? 'active' : ''} ${isAnswered ? 'answered' : ''}`;
+
+    if (isAnswered) {
+      boxClass += isCorrect ? ' correct' : ' incorrect'; 
+    }
+
+    navigationHTML += `<div class="${boxClass}" onclick="goToQuestion(${i})">${i + 1}</div>`;
+  }
+  questionNavigationElement.innerHTML = navigationHTML;
+}
+
+
+function saveQuestionStates() {
+  localStorage.setItem(`questionStates_${currentQuestionType}`, JSON.stringify(questionStates));
+}
+
+function loadQuestionStates() {
+  const savedStates = localStorage.getItem(`questionStates_${currentQuestionType}`);
+  if (savedStates) {
+    questionStates = JSON.parse(savedStates);
+  }
+}
+
+function showFinalResults() {
+  let correctCount = 0;
+  let incorrectCount = 0;
+  const incorrectQuestions = [];
+  const filteredQuestions = questions.filter(q => q.type === currentQuestionType);
+
+  for (let i = 0; i < filteredQuestions.length; i++) {
+    if (questionStates[i].answered) {
+      const userAnswer = questionStates[i].answer.trim();
+      const correctAnswer = filteredQuestions[i].answer.trim();
+      if (userAnswer === correctAnswer) {
+        correctCount++;
+      } else {
+        incorrectCount++;
+        incorrectQuestions.push({
+          question: filteredQuestions[i].question,
+          correctAnswer: filteredQuestions[i].answer
+        });
+      }
+    } else {
+      incorrectCount++; 
+      incorrectQuestions.push({
+        question: filteredQuestions[i].question,
+        correctAnswer: filteredQuestions[i].answer
+      });
+    }
+  }
+
+  document.getElementById("correctCount").textContent = correctCount;
+  document.getElementById("incorrectCount").textContent = incorrectCount;
+
+  let incorrectQuestionsHTML = '';
+  incorrectQuestions.forEach(item => {
+    incorrectQuestionsHTML += `<li>${item.question} - 正确答案: \\(${item.correctAnswer}\\)</li>`;
+  });
+  incorrectQuestionsElement.innerHTML = incorrectQuestionsHTML;
+  MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+
+  finalResultElement.style.display = 'block';
+  // 隐藏答题区域
+  document.querySelector('.container').style.display = 'none';
+  document.querySelector('.question-navigation').style.display = 'none';
+}
+// 插入公式
+function insertFormula(formula) {
+  const answerInput = document.getElementById("answer");
+  const start = answerInput.selectionStart;
+  const end = answerInput.selectionEnd;
+  const currentValue = answerInput.value;
+
+  const newValue = currentValue.substring(0, start) + formula + currentValue.substring(end);
+  answerInput.value = newValue;
+
+  updateAnswerPreview();
+}
+
+// 初始化
+setQuestionType('angle');
+</script>
+
+</body>
+</html>
