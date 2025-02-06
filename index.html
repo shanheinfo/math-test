@@ -23,7 +23,8 @@ body {
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 400px;
+  max-width: 400px;
+  width: 100%;
 }
 
 #question {
@@ -74,6 +75,7 @@ button:hover {
 .question-navigation {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   margin-bottom: 15px;
 }
 
@@ -147,7 +149,7 @@ button:hover {
     tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
   });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+<script src="es6-promise.min.js"></script>
 
 </head>
 <body>
